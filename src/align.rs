@@ -203,7 +203,7 @@ impl<T: Copy, C: AlignedByteChunk> AlignedVec<T, C> {
             .expect("Resizing would overflow the underlying aligned buffer");
 
         let chunk_size = mem::size_of::<C>();
-        let new_chunks = if (new_bytes % chunk_size) == 0 {
+        let new_chunks = if new_bytes.is_multiple_of(chunk_size) {
             new_bytes / chunk_size
         } else {
             // NOTE: can not overflow. This case only occurs on `chunk_size >= 2`.

@@ -168,7 +168,7 @@ impl Rav1dPictureDataComponentInner {
             ptr
         };
         // Guaranteed by `Dav1dPicAllocator::alloc_picture_callback`.
-        assert!(len % RAV1D_PICTURE_MULTIPLE == 0);
+        assert!(len.is_multiple_of(RAV1D_PICTURE_MULTIPLE));
         Self { ptr, len, stride }
     }
 
@@ -209,7 +209,7 @@ unsafe impl AsMutPtr for Rav1dPictureDataComponentInner {
     #[inline] // Inline so callers can see the assume.
     fn len(&self) -> usize {
         // SAFETY: We already checked this in `Self::new`.
-        unsafe { assert_unchecked(self.len % RAV1D_PICTURE_GUARANTEED_MULTIPLE == 0) };
+        unsafe { assert_unchecked(self.len.is_multiple_of(RAV1D_PICTURE_GUARANTEED_MULTIPLE)) };
         self.len
     }
 }

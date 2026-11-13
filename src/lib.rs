@@ -3,7 +3,12 @@
     any(target_arch = "riscv32", target_arch = "riscv64"),
     feature(stdarch_riscv_feature_detection)
 )]
-#![allow(clippy::derivable_impls, clippy::erasing_op, clippy::ptr_eq)]
+#![allow(
+    clippy::derivable_impls,
+    clippy::erasing_op,
+    clippy::incompatible_msrv,
+    clippy::ptr_eq
+)]
 #![expect(
     clippy::arc_with_non_send_sync,
     clippy::borrow_deref_ref,
@@ -16,7 +21,6 @@
     clippy::duplicate_underscore_argument,
     clippy::explicit_auto_deref,
     clippy::identity_op,
-    clippy::incompatible_msrv,
     clippy::int_plus_one,
     clippy::into_iter_on_ref,
     clippy::large_const_arrays,
