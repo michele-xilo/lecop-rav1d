@@ -3,13 +3,13 @@ members = ["."]
 default-members = ["."]
 
 [package]
-name = "hiraku-rav1d"
+name = "lecop-rav1d"
 authors = ["Rav1d Developers", "Prossimo"]
 version = "1.1.1"
 edition = "2024"
-description = "Rust port of the dav1d AV1 decoder"
+description = "Rust port of the dav1d AV1 decoder, with prebuilt x86_64 assembly objects so that building needs no nasm"
 license = "BSD-2-Clause"
-repository = "https://github.com/Hiraku-Project/rav1d"
+repository = "https://github.com/michele-xilo/lecop-rav1d"
 exclude = ["*.c", "*.in", "meson*", "tests/", "doc/", "package/"]
 
 [lib]

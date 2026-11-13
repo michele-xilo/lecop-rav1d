@@ -1,0 +1,53 @@
+name: prebuilt x86_64 objects
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # The objects in prebuilt/ must be exactly what nasm makes from src/x86: nobody can review 6 MB of machine code,
+  # so this job is the review.
+  objects-match-source:
+    runs-on: ubuntu-latest
+    env:
+      NASM_VERSION: "3.01"
+      NASM_SHA256: b7324cbe86e767b65f26f467ed8b12ad80e124e3ccb89076855c98e43a9eddd4
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: build the pinned nasm
+        run: |
+          curl -sSfL -o nasm.tar.xz "https://www.nasm.us/pub/nasm/releasebuilds/$NASM_VERSION/nasm-$NASM_VERSION.tar.xz"
+          echo "$NASM_SHA256  nasm.tar.xz" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/nasm" && tar xf nasm.tar.xz -C "$RUNNER_TEMP/nasm" --strip-components=1
+          cd "$RUNNER_TEMP/nasm" && ./configure && make -j"$(nproc)" nasm
+          echo "$RUNNER_TEMP/nasm" >> "$GITHUB_PATH"
+      - run: nasm -v
+      - name: assemble and compare
+        run: |
+          prebuilt/assemble.sh "$RUNNER_TEMP/objects"
+          for format in elf64 win64 macho64; do
+            diff -r "$RUNNER_TEMP/objects/$format" "prebuilt/$format"
+          done
+
+  # What a crate depending on this one gets: assembly on, no nasm on the machine.
+  build-without-nasm:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+      - name: remove nasm (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get remove -y nasm || true
+      - name: no nasm on PATH
+        shell: bash
+        run: "! command -v nasm"
+      - run: cargo build --release
+      - run: cargo test --release
