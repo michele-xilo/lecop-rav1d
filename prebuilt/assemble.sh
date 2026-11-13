@@ -1,5 +1,6 @@
 #!/bin/bash
 # Assemble the x86_64 sources into <out>/<format>/*.o, with the config build.rs writes for a release build.
+# --reproducible keeps the build time out of the COFF headers, so the same source always gives the same bytes.
 # usage: prebuilt/assemble.sh [out-dir]   (default: prebuilt). CI runs it into a temp dir and compares with prebuilt/.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -21,6 +22,6 @@ for fmt in elf64 win64 macho64; do
   for f in src/x86/*.asm; do
     b=$(basename "$f" .asm)
     case $b in x86inc|filmgrain_common|cpuid) continue ;; esac
-    nasm -f $fmt -I"$cfg/" -Isrc/ -o "$out/$fmt/$b.o" "$f"
+    nasm --reproducible -f $fmt -I"$cfg/" -Isrc/ -o "$out/$fmt/$b.o" "$f"
   done
 done

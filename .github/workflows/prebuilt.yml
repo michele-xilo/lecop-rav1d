@@ -46,6 +46,11 @@ jobs:
       - name: remove nasm (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get remove -y nasm || true
+      # The Windows image carries a nasm (Strawberry Perl).
+      - name: remove nasm (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: while p=$(command -v nasm); do rm -f "$p"; done
       - name: no nasm on PATH
         shell: bash
         run: "! command -v nasm"
