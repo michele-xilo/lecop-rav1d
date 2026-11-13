@@ -41,12 +41,12 @@ pub use crate::include::dav1d::headers::{
     Rav1dContentLightLevel as ContentLightLevel, Rav1dMasteringDisplay as MasteringDisplay,
     Rav1dPixelLayout as PixelLayout,
 };
-use crate::include::dav1d::picture::Rav1dPicture;
 pub use crate::include::dav1d::picture::RAV1D_PICTURE_ALIGNMENT as PICTURE_ALIGNMENT;
+use crate::include::dav1d::picture::Rav1dPicture;
 use crate::internal::Rav1dContext;
 use crate::{
-    rav1d_close, rav1d_flush, rav1d_get_frame_delay, rav1d_get_picture, rav1d_open,
-    rav1d_send_data, CRef, Rav1dData, Rav1dSettings,
+    CRef, Rav1dData, Rav1dSettings, rav1d_close, rav1d_flush, rav1d_get_frame_delay,
+    rav1d_get_picture, rav1d_open, rav1d_send_data,
 };
 
 /// Settings for creating a new [`Decoder`] instance.
@@ -391,11 +391,7 @@ impl Picture {
     /// This is the same timestamp as the one provided to [`Decoder::send_data`].
     pub fn timestamp(&self) -> Option<i64> {
         let ts = self.inner.m.timestamp;
-        if ts == i64::MIN {
-            None
-        } else {
-            Some(ts)
-        }
+        if ts == i64::MIN { None } else { Some(ts) }
     }
 
     /// Duration of the frame.

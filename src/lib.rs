@@ -66,7 +66,9 @@
 )]
 
 #[cfg(not(any(feature = "bitdepth_8", feature = "bitdepth_16")))]
-compile_error!("No bitdepths enabled. Enable one or more of the following features: `bitdepth_8`, `bitdepth_16`");
+compile_error!(
+    "No bitdepths enabled. Enable one or more of the following features: `bitdepth_8`, `bitdepth_16`"
+);
 
 pub mod include {
     pub mod common {
@@ -147,7 +149,7 @@ mod thread_task;
 mod warpmv;
 mod wedge;
 
-use std::ffi::{c_char, c_uint, c_void, CStr};
+use std::ffi::{CStr, c_char, c_uint, c_void};
 use std::ptr::NonNull;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::{Arc, Once};
@@ -164,17 +166,17 @@ use crate::decode::rav1d_decode_frame_exit;
 pub use crate::error::{Dav1dResult, Rav1dError, Rav1dResult};
 use crate::extensions::OptionError as _;
 use crate::in_range::InRange;
-#[cfg(feature = "bitdepth_16")]
-use crate::include::common::bitdepth::BitDepth16;
 #[cfg(feature = "bitdepth_8")]
 use crate::include::common::bitdepth::BitDepth8;
+#[cfg(feature = "bitdepth_16")]
+use crate::include::common::bitdepth::BitDepth16;
 use crate::include::common::intops::clip;
 use crate::include::common::validate::validate_input;
 use crate::include::dav1d::common::{Dav1dDataProps, Rav1dDataProps};
 use crate::include::dav1d::data::{Dav1dData, Rav1dData};
 use crate::include::dav1d::dav1d::{
-    Dav1dContext, Dav1dEventFlags, Dav1dSettings, Rav1dDecodeFrameType, Rav1dInloopFilterType,
-    Rav1dSettings, RAV1D_MAX_THREADS,
+    Dav1dContext, Dav1dEventFlags, Dav1dSettings, RAV1D_MAX_THREADS, Rav1dDecodeFrameType,
+    Rav1dInloopFilterType, Rav1dSettings,
 };
 use crate::include::dav1d::headers::{Dav1dSequenceHeader, Rav1dFilmGrainData};
 use crate::include::dav1d::picture::{Dav1dPicture, Rav1dPicture};
@@ -186,9 +188,9 @@ use crate::internal::{
 use crate::iter::wrapping_iter;
 use crate::log::{Rav1dLog as _, Rav1dLogger};
 use crate::obu::{rav1d_parse_obus, rav1d_parse_sequence_header};
-use crate::picture::{rav1d_picture_alloc_copy, PictureFlags};
+use crate::picture::{PictureFlags, rav1d_picture_alloc_copy};
 use crate::send_sync_non_null::SendSyncNonNull;
-use crate::thread_task::{rav1d_task_delayed_fg, rav1d_worker_task, FRAME_ERROR};
+use crate::thread_task::{FRAME_ERROR, rav1d_task_delayed_fg, rav1d_worker_task};
 
 #[cold]
 fn init_internal() {

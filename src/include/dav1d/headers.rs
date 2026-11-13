@@ -863,11 +863,7 @@ impl Rav1dColorRange {
 
 impl Rav1dColorRange {
     pub const fn from_is_full(is_full: bool) -> Self {
-        if is_full {
-            Self::Full
-        } else {
-            Self::Limited
-        }
+        if is_full { Self::Full } else { Self::Limited }
     }
 
     pub const fn from_dav1d(value: u8) -> Self {
