@@ -285,7 +285,25 @@ mod asm {
 
         let rav1dasm = "rav1dasm";
 
-        if use_nasm {
+        // x86_64 objects assembled ahead of time (prebuilt/assemble.sh), so the build needs no nasm.
+        // RAV1D_NASM=1 assembles from source instead.
+        let prebuilt = match (arch, os) {
+            (Arch::X86(ArchX86::X86_64), "linux") => Some("elf64"),
+            (Arch::X86(ArchX86::X86_64), "windows") => Some("win64"),
+            (Arch::X86(ArchX86::X86_64), "macos") => Some("macho64"),
+            _ => None,
+        }
+        .filter(|_| env::var_os("RAV1D_NASM").is_none());
+        println!("cargo:rerun-if-env-changed=RAV1D_NASM");
+
+        if let Some(format) = prebuilt {
+            let mut cc = cc::Build::new();
+            for path in asm_file_paths {
+                let name = path.file_stem().unwrap().to_str().unwrap();
+                cc.object(format!("prebuilt/{format}/{name}.o"));
+            }
+            cc.compile(rav1dasm);
+        } else if use_nasm {
             let mut nasm = nasm_rs::Build::new();
             nasm.min_version(2, 14, 0);
             nasm.files(asm_file_paths);

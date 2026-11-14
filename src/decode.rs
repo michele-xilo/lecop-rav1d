@@ -2,7 +2,6 @@ use std::ffi::{c_int, c_uint};
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::{array, cmp, iter, mem};
 
-use crate::ctypes::ptrdiff_t;
 use strum::EnumCount;
 
 use crate::align::{Align16, AlignedVec64};
@@ -12,6 +11,7 @@ use crate::cdf::{
     rav1d_cdf_thread_update, CdfMvComponent, CdfThreadContext,
 };
 use crate::ctx::CaseSet;
+use crate::ctypes::ptrdiff_t;
 use crate::dequant_tables::DAV1D_DQ_TBL;
 use crate::disjoint_mut::{DisjointMut, DisjointMutSlice};
 use crate::enum_map::{enum_map, enum_map_ty, DefaultValue};
@@ -4160,7 +4160,14 @@ pub(crate) fn rav1d_decode_tile_sbrow(
                         .try_write()
                         .unwrap();
 
-                    read_restoration_info(ts, &mut ts_c, &mut lr, p, frame_type, debug_block_info!(f, t.b));
+                    read_restoration_info(
+                        ts,
+                        &mut ts_c,
+                        &mut lr,
+                        p,
+                        frame_type,
+                        debug_block_info!(f, t.b),
+                    );
                 }
             } else {
                 let x = 4 * t.b.x >> ss_hor;
@@ -4179,7 +4186,14 @@ pub(crate) fn rav1d_decode_tile_sbrow(
                     .try_write()
                     .unwrap();
 
-                read_restoration_info(ts, &mut ts_c, &mut lr, p, frame_type, debug_block_info!(f, t.b));
+                read_restoration_info(
+                    ts,
+                    &mut ts_c,
+                    &mut lr,
+                    p,
+                    frame_type,
+                    debug_block_info!(f, t.b),
+                );
             }
         }
         decode_sb(

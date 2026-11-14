@@ -41,10 +41,7 @@ jobs:
     name: test on ${{ matrix.target }}
     steps:
       - name: install prerequisites
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: ${{ matrix.packages }} qemu-user-static meson nasm
-          version: 3.0 # version of cache to load
+        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.packages }} qemu-user-static meson nasm
       - name: git checkout
         uses: actions/checkout@v4
         with:

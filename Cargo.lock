@@ -115,6 +115,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "lecop-rav1d"
+version = "1.3.0"
+dependencies = [
+ "assert_matches",
+ "atomig",
+ "av-data",
+ "bitflags",
+ "cc",
+ "cfg-if",
+ "libc",
+ "nasm-rs",
+ "parking_lot",
+ "paste",
+ "raw-cpuid",
+ "static_assertions",
+ "strum",
+ "to_method",
+ "zerocopy",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.172"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -254,9 +275,9 @@ version = "1.1.0"
 dependencies = [
  "cc",
  "cfg-if",
+ "lecop-rav1d",
  "libc",
  "rusty_alloc-api",
- "rusty_av1d",
  "windows-sys 0.52.0",
 ]
 
@@ -302,27 +323,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72a5b07b04e499fe5ff94c9866fd3b39e148b02f978b42ee6f572f92d7e32b9f"
 dependencies = [
  "rusty_alloc",
-]
-
-[[package]]
-name = "rusty_av1d"
-version = "1.3.0"
-dependencies = [
- "assert_matches",
- "atomig",
- "av-data",
- "bitflags",
- "cc",
- "cfg-if",
- "libc",
- "nasm-rs",
- "parking_lot",
- "paste",
- "raw-cpuid",
- "static_assertions",
- "strum",
- "to_method",
- "zerocopy",
 ]
 
 [[package]]
