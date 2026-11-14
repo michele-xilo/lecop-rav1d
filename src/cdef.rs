@@ -4,10 +4,10 @@ use std::ffi::{c_int, c_uint};
 use std::{cmp, ptr};
 
 use bitflags::bitflags;
-use crate::ctypes::ptrdiff_t;
 
 use crate::align::AlignedVec64;
 use crate::cpu::CpuFlags;
+use crate::ctypes::ptrdiff_t;
 use crate::disjoint_mut::DisjointMut;
 use crate::ffi_safe::FFISafe;
 #[cfg(all(

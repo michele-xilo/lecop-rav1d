@@ -177,26 +177,25 @@ fn put_8tap_rust<BD: BitDepth>(
         if let Some(fv) = fv {
             let tmp_h = h + 7;
             scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 135]| {
-
-            for y in 0..tmp_h {
-                let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
-                let row = (src + -3isize).slice::<BD>(w + 7);
-                for x in 0..w {
-                    mid[y][x] = filter_8tap_row::<BD>(&row, x, fh)
-                        .rnd(6 - intermediate_bits)
-                        .get();
+                for y in 0..tmp_h {
+                    let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
+                    let row = (src + -3isize).slice::<BD>(w + 7);
+                    for x in 0..w {
+                        mid[y][x] = filter_8tap_row::<BD>(&row, x, fh)
+                            .rnd(6 - intermediate_bits)
+                            .get();
+                    }
                 }
-            }
 
-            for y in 0..h {
-                let dst = dst + y as isize * dst.pixel_stride::<BD>();
-                let dst = &mut *dst.slice_mut::<BD>(w);
-                for x in 0..w {
-                    dst[x] = filter_8tap_mid(&mid[y..], x, fv)
-                        .rnd(6 + intermediate_bits)
-                        .clip(bd);
+                for y in 0..h {
+                    let dst = dst + y as isize * dst.pixel_stride::<BD>();
+                    let dst = &mut *dst.slice_mut::<BD>(w);
+                    for x in 0..w {
+                        dst[x] = filter_8tap_mid(&mid[y..], x, fv)
+                            .rnd(6 + intermediate_bits)
+                            .clip(bd);
+                    }
                 }
-            }
             });
         } else {
             for y in 0..h {
@@ -244,46 +243,45 @@ fn put_8tap_scaled_rust<BD: BitDepth>(
     let intermediate_rnd = (1 << intermediate_bits) >> 1;
     let tmp_h = ((h - 1) * dy + my >> 10) + 8;
     scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 256 + 7]| {
+        for y in 0..tmp_h {
+            let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
+            let mut imx = mx;
+            let mut ioff = 0;
 
-    for y in 0..tmp_h {
-        let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
-        let mut imx = mx;
-        let mut ioff = 0;
-
-        for x in 0..w {
-            let fh = get_filter(imx >> 6, w, h_filter_type);
-            mid[y][x] = match fh {
-                Some(fh) => filter_8tap::<BD>(src, ioff, fh, 1)
-                    .rnd(6 - intermediate_bits)
-                    .get(),
-                None => (*(src + ioff).index::<BD>()).as_::<i16>() << intermediate_bits,
-            };
-            imx += dx;
-            ioff += imx >> 10;
-            imx &= 0x3ff;
+            for x in 0..w {
+                let fh = get_filter(imx >> 6, w, h_filter_type);
+                mid[y][x] = match fh {
+                    Some(fh) => filter_8tap::<BD>(src, ioff, fh, 1)
+                        .rnd(6 - intermediate_bits)
+                        .get(),
+                    None => (*(src + ioff).index::<BD>()).as_::<i16>() << intermediate_bits,
+                };
+                imx += dx;
+                ioff += imx >> 10;
+                imx &= 0x3ff;
+            }
         }
-    }
-    let mut mid = &mut mid[..];
-    for y in 0..h {
-        let fv = get_filter(my >> 6, h, v_filter_type);
+        let mut mid = &mut mid[..];
+        for y in 0..h {
+            let fv = get_filter(my >> 6, h, v_filter_type);
 
-        let dst = dst + y as isize * dst.pixel_stride::<BD>();
-        let dst = &mut *dst.slice_mut::<BD>(w);
-        for x in 0..w {
-            dst[x] = match fv {
-                Some(fv) => filter_8tap_mid(mid, x, fv)
-                    .rnd(6 + intermediate_bits)
-                    .clip(bd),
-                None => {
-                    bd.iclip_pixel((i32::from(mid[3][x]) + intermediate_rnd) >> intermediate_bits)
-                }
-            };
+            let dst = dst + y as isize * dst.pixel_stride::<BD>();
+            let dst = &mut *dst.slice_mut::<BD>(w);
+            for x in 0..w {
+                dst[x] = match fv {
+                    Some(fv) => filter_8tap_mid(mid, x, fv)
+                        .rnd(6 + intermediate_bits)
+                        .clip(bd),
+                    None => bd.iclip_pixel(
+                        (i32::from(mid[3][x]) + intermediate_rnd) >> intermediate_bits,
+                    ),
+                };
+            }
+
+            my += dy;
+            mid = &mut mid[(my >> 10)..];
+            my &= 0x3ff;
         }
-
-        my += dy;
-        mid = &mut mid[(my >> 10)..];
-        my &= 0x3ff;
-    }
     });
 }
 
@@ -306,25 +304,24 @@ fn prep_8tap_rust<BD: BitDepth>(
         if let Some(fv) = fv {
             let tmp_h = h + 7;
             scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 135]| {
-
-            for y in 0..tmp_h {
-                let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
-                let row = (src + -3isize).slice::<BD>(w + 7);
-                for x in 0..w {
-                    mid[y][x] = filter_8tap_row::<BD>(&row, x, fh)
-                        .rnd(6 - intermediate_bits)
-                        .get();
+                for y in 0..tmp_h {
+                    let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
+                    let row = (src + -3isize).slice::<BD>(w + 7);
+                    for x in 0..w {
+                        mid[y][x] = filter_8tap_row::<BD>(&row, x, fh)
+                            .rnd(6 - intermediate_bits)
+                            .get();
+                    }
                 }
-            }
 
-            for y in 0..h {
-                let tmp = &mut tmp[y * w..][..w];
-                for x in 0..w {
-                    tmp[x] = filter_8tap_mid(&mid[y..], x, fv)
-                        .rnd(6)
-                        .sub_prep_bias::<BD>();
+                for y in 0..h {
+                    let tmp = &mut tmp[y * w..][..w];
+                    for x in 0..w {
+                        tmp[x] = filter_8tap_mid(&mid[y..], x, fv)
+                            .rnd(6)
+                            .sub_prep_bias::<BD>();
+                    }
                 }
-            }
             });
         } else {
             for y in 0..h {
@@ -369,42 +366,41 @@ fn prep_8tap_scaled_rust<BD: BitDepth>(
     let intermediate_bits = bd.get_intermediate_bits();
     let tmp_h = ((h - 1) * dy + my >> 10) + 8;
     scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 256 + 7]| {
-
-    for y in 0..tmp_h {
-        let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
-        let mut imx = mx;
-        let mut ioff = 0;
-        for x in 0..w {
-            let fh = get_filter(imx >> 6, w, h_filter_type);
-            mid[y][x] = match fh {
-                Some(fh) => filter_8tap::<BD>(src, ioff, fh, 1)
-                    .rnd(6 - intermediate_bits)
-                    .get(),
-                None => (*(src + ioff).index::<BD>()).as_::<i16>() << intermediate_bits,
-            };
-            imx += dx;
-            ioff += imx >> 10;
-            imx &= 0x3ff;
-        }
-    }
-
-    let mut mid = &mut mid[..];
-    for y in 0..h {
-        let tmp = &mut tmp[y * w..][..w];
-        let fv = get_filter(my >> 6, h, v_filter_type);
-        for x in 0..w {
-            tmp[x] = match fv {
-                Some(fv) => filter_8tap_mid(mid, x, fv).rnd(6),
-                None => FilterResult {
-                    pixel: mid[3][x].into(),
-                },
+        for y in 0..tmp_h {
+            let src = src + (y as isize - 3) * src.pixel_stride::<BD>();
+            let mut imx = mx;
+            let mut ioff = 0;
+            for x in 0..w {
+                let fh = get_filter(imx >> 6, w, h_filter_type);
+                mid[y][x] = match fh {
+                    Some(fh) => filter_8tap::<BD>(src, ioff, fh, 1)
+                        .rnd(6 - intermediate_bits)
+                        .get(),
+                    None => (*(src + ioff).index::<BD>()).as_::<i16>() << intermediate_bits,
+                };
+                imx += dx;
+                ioff += imx >> 10;
+                imx &= 0x3ff;
             }
-            .sub_prep_bias::<BD>()
         }
-        my += dy;
-        mid = &mut mid[(my >> 10)..];
-        my &= 0x3ff;
-    }
+
+        let mut mid = &mut mid[..];
+        for y in 0..h {
+            let tmp = &mut tmp[y * w..][..w];
+            let fv = get_filter(my >> 6, h, v_filter_type);
+            for x in 0..w {
+                tmp[x] = match fv {
+                    Some(fv) => filter_8tap_mid(mid, x, fv).rnd(6),
+                    None => FilterResult {
+                        pixel: mid[3][x].into(),
+                    },
+                }
+                .sub_prep_bias::<BD>()
+            }
+            my += dy;
+            mid = &mut mid[(my >> 10)..];
+            my &= 0x3ff;
+        }
     });
 }
 
@@ -443,25 +439,25 @@ fn put_bilin_rust<BD: BitDepth>(
     if mx != 0 {
         if my != 0 {
             scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 129]| {
-            let tmp_h = h + 1;
+                let tmp_h = h + 1;
 
-            for y in 0..tmp_h {
-                let src = src + y as isize * src.pixel_stride::<BD>();
-                for x in 0..w {
-                    mid[y][x] = filter_bilin::<BD>(src, x, mx, 1)
-                        .rnd(4 - intermediate_bits)
-                        .get();
+                for y in 0..tmp_h {
+                    let src = src + y as isize * src.pixel_stride::<BD>();
+                    for x in 0..w {
+                        mid[y][x] = filter_bilin::<BD>(src, x, mx, 1)
+                            .rnd(4 - intermediate_bits)
+                            .get();
+                    }
                 }
-            }
-            for y in 0..h {
-                let dst = dst + y as isize * dst.pixel_stride::<BD>();
-                let dst = &mut *dst.slice_mut::<BD>(w);
-                for x in 0..w {
-                    dst[x] = filter_bilin_mid(&mid[y..], x, my)
-                        .rnd(4 + intermediate_bits)
-                        .clip(bd)
+                for y in 0..h {
+                    let dst = dst + y as isize * dst.pixel_stride::<BD>();
+                    let dst = &mut *dst.slice_mut::<BD>(w);
+                    for x in 0..w {
+                        dst[x] = filter_bilin_mid(&mid[y..], x, my)
+                            .rnd(4 + intermediate_bits)
+                            .clip(bd)
+                    }
                 }
-            }
             });
         } else {
             for y in 0..h {
@@ -506,35 +502,34 @@ fn put_bilin_scaled_rust<BD: BitDepth>(
     let intermediate_bits = bd.get_intermediate_bits();
     let tmp_h = ((h - 1) * dy + my >> 10) + 2;
     scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 256 + 1]| {
+        for y in 0..tmp_h {
+            let src = src + y as isize * src.pixel_stride::<BD>();
+            let mut imx = mx;
+            let mut ioff = 0;
 
-    for y in 0..tmp_h {
-        let src = src + y as isize * src.pixel_stride::<BD>();
-        let mut imx = mx;
-        let mut ioff = 0;
-
-        for x in 0..w {
-            mid[y][x] = filter_bilin::<BD>(src, ioff, imx >> 6, 1)
-                .rnd(4 - intermediate_bits)
-                .get();
-            imx += dx;
-            ioff += imx >> 10;
-            imx &= 0x3ff;
+            for x in 0..w {
+                mid[y][x] = filter_bilin::<BD>(src, ioff, imx >> 6, 1)
+                    .rnd(4 - intermediate_bits)
+                    .get();
+                imx += dx;
+                ioff += imx >> 10;
+                imx &= 0x3ff;
+            }
         }
-    }
-    let mut mid = &mut mid[..];
-    for y in 0..h {
-        let dst = dst + y as isize * dst.pixel_stride::<BD>();
-        let dst = &mut *dst.slice_mut::<BD>(w);
-        for x in 0..w {
-            dst[x] = filter_bilin_mid(mid, x, my >> 6)
-                .rnd(4 + intermediate_bits)
-                .clip(bd)
-        }
+        let mut mid = &mut mid[..];
+        for y in 0..h {
+            let dst = dst + y as isize * dst.pixel_stride::<BD>();
+            let dst = &mut *dst.slice_mut::<BD>(w);
+            for x in 0..w {
+                dst[x] = filter_bilin_mid(mid, x, my >> 6)
+                    .rnd(4 + intermediate_bits)
+                    .clip(bd)
+            }
 
-        my += dy;
-        mid = &mut mid[(my >> 10)..];
-        my &= 0x3ff;
-    }
+            my += dy;
+            mid = &mut mid[(my >> 10)..];
+            my &= 0x3ff;
+        }
     });
 }
 
@@ -551,24 +546,24 @@ fn prep_bilin_rust<BD: BitDepth>(
     if mx != 0 {
         if my != 0 {
             scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 129]| {
-            let tmp_h = h + 1;
+                let tmp_h = h + 1;
 
-            for y in 0..tmp_h {
-                let src = src + y as isize * src.pixel_stride::<BD>();
-                for x in 0..w {
-                    mid[y][x] = filter_bilin::<BD>(src, x, mx, 1)
-                        .rnd(4 - intermediate_bits)
-                        .get();
+                for y in 0..tmp_h {
+                    let src = src + y as isize * src.pixel_stride::<BD>();
+                    for x in 0..w {
+                        mid[y][x] = filter_bilin::<BD>(src, x, mx, 1)
+                            .rnd(4 - intermediate_bits)
+                            .get();
+                    }
                 }
-            }
-            for y in 0..h {
-                let tmp = &mut tmp[y * w..][..w];
-                for x in 0..w {
-                    tmp[x] = filter_bilin_mid(&mid[y..], x, my)
-                        .rnd(4)
-                        .sub_prep_bias::<BD>()
+                for y in 0..h {
+                    let tmp = &mut tmp[y * w..][..w];
+                    for x in 0..w {
+                        tmp[x] = filter_bilin_mid(&mid[y..], x, my)
+                            .rnd(4)
+                            .sub_prep_bias::<BD>()
+                    }
                 }
-            }
             });
         } else {
             for y in 0..h {
@@ -610,34 +605,33 @@ fn prep_bilin_scaled_rust<BD: BitDepth>(
     let intermediate_bits = bd.get_intermediate_bits();
     let tmp_h = ((h - 1) * dy + my >> 10) + 2;
     scratch::with1(&MC_MID, |mid: &mut [[i16; MID_STRIDE]; 256 + 1]| {
+        for y in 0..tmp_h {
+            let src = src + y as isize * src.pixel_stride::<BD>();
+            let mut imx = mx;
+            let mut ioff = 0;
 
-    for y in 0..tmp_h {
-        let src = src + y as isize * src.pixel_stride::<BD>();
-        let mut imx = mx;
-        let mut ioff = 0;
-
-        for x in 0..w {
-            mid[y][x] = filter_bilin::<BD>(src, ioff, imx >> 6, 1)
-                .rnd(4 - intermediate_bits)
-                .get();
-            imx += dx;
-            ioff += imx >> 10;
-            imx &= 0x3ff;
+            for x in 0..w {
+                mid[y][x] = filter_bilin::<BD>(src, ioff, imx >> 6, 1)
+                    .rnd(4 - intermediate_bits)
+                    .get();
+                imx += dx;
+                ioff += imx >> 10;
+                imx &= 0x3ff;
+            }
         }
-    }
-    let mut mid = &mut mid[..];
-    for y in 0..h {
-        let tmp = &mut tmp[y * w..][..w];
-        for x in 0..w {
-            tmp[x] = filter_bilin_mid(mid, x, my >> 6)
-                .rnd(4)
-                .sub_prep_bias::<BD>()
-        }
+        let mut mid = &mut mid[..];
+        for y in 0..h {
+            let tmp = &mut tmp[y * w..][..w];
+            for x in 0..w {
+                tmp[x] = filter_bilin_mid(mid, x, my >> 6)
+                    .rnd(4)
+                    .sub_prep_bias::<BD>()
+            }
 
-        my += dy;
-        mid = &mut mid[(my >> 10)..];
-        my &= 0x3ff;
-    }
+            my += dy;
+            mid = &mut mid[(my >> 10)..];
+            my &= 0x3ff;
+        }
     });
 }
 

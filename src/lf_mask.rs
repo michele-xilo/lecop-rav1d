@@ -3,11 +3,11 @@ use std::ffi::c_int;
 use std::iter::zip;
 use std::mem::MaybeUninit;
 
-use crate::ctypes::ptrdiff_t;
 use parking_lot::RwLock;
 
 use crate::align::{Align16, AlignedVec2, ArrayDefault};
 use crate::ctx::CaseSet;
+use crate::ctypes::ptrdiff_t;
 use crate::disjoint_mut::DisjointMut;
 use crate::include::common::intops::{clip, iclip};
 use crate::include::dav1d::headers::{

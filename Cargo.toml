@@ -3,15 +3,15 @@ members = [".", "tools"]
 default-members = [".", "tools"]
 
 [package]
-name = "rusty_av1d"
+name = "lecop-rav1d"
 authors = ["Rav1d Developers", "Prossimo"]
 version = "1.3.0"
 edition = "2021"
 rust-version = "1.79"
-description = "Remade With Rust fork of rav1d (Rust port of the dav1d AV1 decoder) with a pure-Rust no-asm build path"
+description = "Fork of rusty_av1d (rav1d, the Rust port of the dav1d AV1 decoder) whose x86_64 assembly ships prebuilt, so building needs no nasm"
 license = "BSD-2-Clause"
 readme = "README.md"
-repository = "https://github.com/Remade-With-Rust/rusty-av1-toolkit"
+repository = "https://github.com/michele-xilo/lecop-rav1d"
 keywords = ["av1", "video", "decoder", "codec", "dav1d"]
 categories = ["multimedia::video", "multimedia::encoding"]
 # `src/arm/asm-offsets.h` is re-included: the aarch64/arm `.S` sources (refmvs,

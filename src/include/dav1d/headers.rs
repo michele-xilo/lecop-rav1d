@@ -1804,7 +1804,7 @@ pub struct Dav1dFilmGrainData {
     /// as [`Self::ar_coeff_shift`] being the last field would
     /// read 8 bytes out of bounds and be UB.
     ///
-        pub ar_coeff_shift: u64,
+    pub ar_coeff_shift: u64,
     pub grain_scale_shift: c_int,
     pub uv_mult: [c_int; 2],
     pub uv_luma_mult: [c_int; 2],

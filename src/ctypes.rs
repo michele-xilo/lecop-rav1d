@@ -53,21 +53,14 @@ pub type off_t = i32;
 
 /// See the Windows variant above.
 #[allow(non_camel_case_types)]
-#[cfg(all(
-    not(windows),
-    not(target_family = "wasm"),
-    target_pointer_width = "32"
-))]
+#[cfg(all(not(windows), not(target_family = "wasm"), target_pointer_width = "32"))]
 pub type off_t = i32;
 
 /// See the Windows variant above. wasm has no `libc::off_t` to match, so it
 /// takes the 64-bit definition — a byte offset into a bitstream wants to be 64
 /// bits regardless.
 #[allow(non_camel_case_types)]
-#[cfg(any(
-    target_family = "wasm",
-    all(not(windows), target_pointer_width = "64")
-))]
+#[cfg(any(target_family = "wasm", all(not(windows), target_pointer_width = "64")))]
 pub type off_t = i64;
 
 /// `errno` values used as [`Rav1dError`](crate::error::Rav1dError) discriminants.

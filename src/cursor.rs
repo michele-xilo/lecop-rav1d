@@ -28,6 +28,7 @@ impl<'a, T> CursorMut<'a, T> {
         self.as_mut_slice().as_mut_ptr()
     }
 
+    #[allow(dead_code)]
     pub fn clone(&mut self) -> CursorMut<'_, T> {
         CursorMut {
             data: self.data,

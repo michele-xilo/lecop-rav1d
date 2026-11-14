@@ -110,42 +110,42 @@ fn inv_txfm_add<BD: BitDepth>(
     let col_clip_max = !col_clip_min;
 
     ITX_TMP.with_borrow_mut(|tmp| {
-    let mut c = &mut tmp[..];
-    for y in 0..sh {
-        if is_rect2 {
-            for x in 0..sw {
-                c[x] = coeff[y + x * sh].as_::<i32>() * 181 + 128 >> 8;
+        let mut c = &mut tmp[..];
+        for y in 0..sh {
+            if is_rect2 {
+                for x in 0..sw {
+                    c[x] = coeff[y + x * sh].as_::<i32>() * 181 + 128 >> 8;
+                }
+            } else {
+                for x in 0..sw {
+                    c[x] = coeff[y + x * sh].as_();
+                }
             }
-        } else {
-            for x in 0..sw {
-                c[x] = coeff[y + x * sh].as_();
-            }
+            first_1d_fn(c, 1.try_into().unwrap(), row_clip_min, row_clip_max);
+            c = &mut c[w..];
         }
-        first_1d_fn(c, 1.try_into().unwrap(), row_clip_min, row_clip_max);
-        c = &mut c[w..];
-    }
 
-    coeff.fill(0.into());
-    for i in 0..w * sh {
-        tmp[i] = iclip(tmp[i] + rnd >> shift, col_clip_min, col_clip_max);
-    }
+        coeff.fill(0.into());
+        for i in 0..w * sh {
+            tmp[i] = iclip(tmp[i] + rnd >> shift, col_clip_min, col_clip_max);
+        }
 
-    for x in 0..w {
-        second_1d_fn(
-            &mut tmp[x..],
-            w.try_into().unwrap(),
-            col_clip_min,
-            col_clip_max,
-        );
-    }
-
-    for y in 0..h {
-        let dst = dst + (y as isize * dst.pixel_stride::<BD>());
-        let dst = &mut *dst.slice_mut::<BD>(w);
         for x in 0..w {
-            dst[x] = bd.iclip_pixel(dst[x].as_::<i32>() + (tmp[y * w + x] + 8 >> 4));
+            second_1d_fn(
+                &mut tmp[x..],
+                w.try_into().unwrap(),
+                col_clip_min,
+                col_clip_max,
+            );
         }
-    }
+
+        for y in 0..h {
+            let dst = dst + (y as isize * dst.pixel_stride::<BD>());
+            let dst = &mut *dst.slice_mut::<BD>(w);
+            for x in 0..w {
+                dst[x] = bd.iclip_pixel(dst[x].as_::<i32>() + (tmp[y * w + x] + 8 >> 4));
+            }
+        }
     });
 }
 

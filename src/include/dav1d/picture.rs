@@ -6,11 +6,11 @@ use std::ptr::NonNull;
 use std::sync::Arc;
 use std::{array, mem};
 
-use crate::ctypes::{ptrdiff_t, uintptr_t};
 use to_method::To as _;
 use zerocopy::{AsBytes, FromBytes, FromZeroes};
 
 use crate::c_arc::RawArc;
+use crate::ctypes::{ptrdiff_t, uintptr_t};
 use crate::disjoint_mut::{
     AsMutPtr, DisjointImmutGuard, DisjointMut, DisjointMutGuard, SliceBounds,
 };
@@ -354,7 +354,9 @@ impl<'a> Rav1dPictureDataComponentOffset<'a> {
         stride: isize,
         dst: &mut [[BD::Pixel; N]; ROWS],
     ) {
-        self.data.0.copy_rows_to::<BD::Pixel, N, ROWS>(self.offset, stride, dst)
+        self.data
+            .0
+            .copy_rows_to::<BD::Pixel, N, ROWS>(self.offset, stride, dst)
     }
 
     #[inline] // Inline to see bounds checks in order to potentially elide them.
