@@ -61,4 +61,6 @@ jobs:
         shell: bash
         run: |
           pip install meson ninja
+          # meson.build looks for nasm to build the C library, which these tests do not use.
+          meson setup build -Denable_asm=false
           .github/workflows/test.sh -r target/release/dav1d -s target/release/seek_stress
