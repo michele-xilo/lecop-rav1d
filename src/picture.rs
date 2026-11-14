@@ -6,8 +6,8 @@ use std::sync::atomic::AtomicU32;
 use std::sync::Arc;
 use std::{mem, ptr};
 
-use bitflags::bitflags;
 use crate::ctypes::ptrdiff_t;
+use bitflags::bitflags;
 use to_method::To as _;
 
 use crate::error::{Dav1dResult, Rav1dError, Rav1dResult};

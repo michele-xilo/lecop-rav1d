@@ -3,8 +3,8 @@
 use std::ffi::{c_int, c_uint};
 use std::{cmp, ptr};
 
-use bitflags::bitflags;
 use crate::ctypes::ptrdiff_t;
+use bitflags::bitflags;
 
 use crate::align::AlignedVec64;
 use crate::cpu::CpuFlags;

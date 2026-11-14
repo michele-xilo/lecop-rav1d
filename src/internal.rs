@@ -5,8 +5,8 @@ use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU32, Ordering};
 use std::sync::{Arc, OnceLock};
 use std::thread::JoinHandle;
 
-use atomig::{Atom, Atomic};
 use crate::ctypes::ptrdiff_t;
+use atomig::{Atom, Atomic};
 use parking_lot::{Condvar, Mutex, RwLock, RwLockReadGuard};
 use strum::FromRepr;
 use zerocopy::{AsBytes, FromBytes, FromZeroes};

@@ -354,7 +354,9 @@ impl<'a> Rav1dPictureDataComponentOffset<'a> {
         stride: isize,
         dst: &mut [[BD::Pixel; N]; ROWS],
     ) {
-        self.data.0.copy_rows_to::<BD::Pixel, N, ROWS>(self.offset, stride, dst)
+        self.data
+            .0
+            .copy_rows_to::<BD::Pixel, N, ROWS>(self.offset, stride, dst)
     }
 
     #[inline] // Inline to see bounds checks in order to potentially elide them.

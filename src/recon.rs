@@ -5,8 +5,8 @@ use std::hint::assert_unchecked;
 use std::ops::BitOr;
 use std::{array, cmp, ptr};
 
-use assert_matches::debug_assert_matches;
 use crate::ctypes::intptr_t;
+use assert_matches::debug_assert_matches;
 use to_method::To as _;
 
 use crate::cdef_apply::rav1d_cdef_brow;
@@ -37,10 +37,9 @@ use crate::lf_apply::{rav1d_copy_lpf, rav1d_loopfilter_sbrow_cols, rav1d_loopfil
 use crate::lr_apply::rav1d_lr_sbrow;
 use crate::msac::{
     rav1d_msac_decode_bool_adapt, rav1d_msac_decode_bool_equi, rav1d_msac_decode_bool_equi_bit,
-    rav1d_msac_decode_bools,
-    rav1d_msac_decode_hi_tok, rav1d_msac_decode_symbol_adapt16, rav1d_msac_decode_symbol_adapt4,
-    rav1d_msac_decode_symbol_adapt4_coef, rav1d_msac_decode_hi_tok_coef,
-    rav1d_msac_decode_bool_equi_coef,
+    rav1d_msac_decode_bool_equi_coef, rav1d_msac_decode_bools, rav1d_msac_decode_hi_tok,
+    rav1d_msac_decode_hi_tok_coef, rav1d_msac_decode_symbol_adapt16,
+    rav1d_msac_decode_symbol_adapt4, rav1d_msac_decode_symbol_adapt4_coef,
     rav1d_msac_decode_symbol_adapt8, MsacContext,
 };
 use crate::picture::Rav1dThreadPicture;
@@ -988,7 +987,8 @@ fn decode_coefs<BD: BitDepth>(
             if tx_class == TxClass::TwoD {
                 y |= x;
             }
-            tok = rav1d_msac_decode_symbol_adapt4_coef(&mut ts_c.msac, &mut lo_cdf[lo_ctx.get()], 3);
+            tok =
+                rav1d_msac_decode_symbol_adapt4_coef(&mut ts_c.msac, &mut lo_cdf[lo_ctx.get()], 3);
             if dbg {
                 println!(
                     "Post-lo_tok[{}][{}][{}][{}={}={}]: r={}",
@@ -1844,8 +1844,14 @@ fn mc<BD: BitDepth, const SS_HOR: bool, const SS_VER: bool, const PAIR: bool>(
 
     let ss_ver = SS_VER as c_int;
     let ss_hor = SS_HOR as c_int;
-    debug_assert_eq!(ss_ver, (pl != 0 && f.cur.p.layout == Rav1dPixelLayout::I420) as c_int);
-    debug_assert_eq!(ss_hor, (pl != 0 && f.cur.p.layout != Rav1dPixelLayout::I444) as c_int);
+    debug_assert_eq!(
+        ss_ver,
+        (pl != 0 && f.cur.p.layout == Rav1dPixelLayout::I420) as c_int
+    );
+    debug_assert_eq!(
+        ss_hor,
+        (pl != 0 && f.cur.p.layout != Rav1dPixelLayout::I444) as c_int
+    );
     let h_mul = 4 >> ss_hor;
     let v_mul = 4 >> ss_ver;
     let mvx = mv.x as c_int;
@@ -1897,7 +1903,9 @@ fn mc<BD: BitDepth, const SS_HOR: bool, const SS_VER: bool, const PAIR: bool>(
                     }
                 } else {
                     let r#ref = &ref_data[pl];
-                    r#ref.with_offset::<BD>() + (dy as isize * r#ref.pixel_stride::<BD>()) + dx as usize
+                    r#ref.with_offset::<BD>()
+                        + (dy as isize * r#ref.pixel_stride::<BD>())
+                        + dx as usize
                 };
 
                 let w = bw4 * h_mul;
@@ -1980,7 +1988,9 @@ fn mc<BD: BitDepth, const SS_HOR: bool, const SS_VER: bool, const PAIR: bool>(
                     }
                 } else {
                     let r#ref = &ref_data[pl];
-                    r#ref.with_offset::<BD>() + (top as isize * r#ref.pixel_stride::<BD>()) + left as isize
+                    r#ref.with_offset::<BD>()
+                        + (top as isize * r#ref.pixel_stride::<BD>())
+                        + left as isize
                 };
 
                 let w = bw4 * h_mul;
@@ -1991,10 +2001,12 @@ fn mc<BD: BitDepth, const SS_HOR: bool, const SS_VER: bool, const PAIR: bool>(
                 let dy = f.svc[refidx][1].step;
                 match dst {
                     MaybeTempPixels::NonTemp { dst } => {
-                        f.dsp.mc.mc_scaled[filter_2d].call::<BD>(dst, r#ref, w, h, mx, my, dx, dy, bd);
+                        f.dsp.mc.mc_scaled[filter_2d]
+                            .call::<BD>(dst, r#ref, w, h, mx, my, dx, dy, bd);
                     }
                     MaybeTempPixels::Temp { tmp, tmp_stride: _ } => {
-                        f.dsp.mc.mct_scaled[filter_2d].call::<BD>(tmp, r#ref, w, h, mx, my, dx, dy, bd);
+                        f.dsp.mc.mct_scaled[filter_2d]
+                            .call::<BD>(tmp, r#ref, w, h, mx, my, dx, dy, bd);
                     }
                 }
             }};

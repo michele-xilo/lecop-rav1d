@@ -4160,7 +4160,14 @@ pub(crate) fn rav1d_decode_tile_sbrow(
                         .try_write()
                         .unwrap();
 
-                    read_restoration_info(ts, &mut ts_c, &mut lr, p, frame_type, debug_block_info!(f, t.b));
+                    read_restoration_info(
+                        ts,
+                        &mut ts_c,
+                        &mut lr,
+                        p,
+                        frame_type,
+                        debug_block_info!(f, t.b),
+                    );
                 }
             } else {
                 let x = 4 * t.b.x >> ss_hor;
@@ -4179,7 +4186,14 @@ pub(crate) fn rav1d_decode_tile_sbrow(
                     .try_write()
                     .unwrap();
 
-                read_restoration_info(ts, &mut ts_c, &mut lr, p, frame_type, debug_block_info!(f, t.b));
+                read_restoration_info(
+                    ts,
+                    &mut ts_c,
+                    &mut lr,
+                    p,
+                    frame_type,
+                    debug_block_info!(f, t.b),
+                );
             }
         }
         decode_sb(

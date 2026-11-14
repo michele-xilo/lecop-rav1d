@@ -201,30 +201,120 @@ fn loop_filter<BD: BitDepth, const WD: c_int, const ROW: bool>(
         }
 
         if wd >= 16 && flat8out && flat8in {
-            put_dst!(-6, (p6 + p6 + p6 + p6 + p6 + p6 * 2 + p5 * 2 + p4 * 2 + p3 + p2 + p1 + p0 + q0 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(-5, (p6 + p6 + p6 + p6 + p6 + p5 * 2 + p4 * 2 + p3 * 2 + p2 + p1 + p0 + q0 + q1 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(-4, (p6 + p6 + p6 + p6 + p5 + p4 * 2 + p3 * 2 + p2 * 2 + p1 + p0 + q0 + q1 + q2 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(-3, (p6 + p6 + p6 + p5 + p4 + p3 * 2 + p2 * 2 + p1 * 2 + p0 + q0 + q1 + q2 + q3 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(-2, (p6 + p6 + p5 + p4 + p3 + p2 * 2 + p1 * 2 + p0 * 2 + q0 + q1 + q2 + q3 + q4 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(-1, (p6 + p5 + p4 + p3 + p2 + p1 * 2 + p0 * 2 + q0 * 2 + q1 + q2 + q3 + q4 + q5 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(0, (p5 + p4 + p3 + p2 + p1 + p0 * 2 + q0 * 2 + q1 * 2 + q2 + q3 + q4 + q5 + q6 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(1, (p4 + p3 + p2 + p1 + p0 + q0 * 2 + q1 * 2 + q2 * 2 + q3 + q4 + q5 + q6 + q6 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(2, (p3 + p2 + p1 + p0 + q0 + q1 * 2 + q2 * 2 + q3 * 2 + q4 + q5 + q6 + q6 + q6 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(3, (p2 + p1 + p0 + q0 + q1 + q2 * 2 + q3 * 2 + q4 * 2 + q5 + q6 + q6 + q6 + q6 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(4, (p1 + p0 + q0 + q1 + q2 + q3 * 2 + q4 * 2 + q5 * 2 + q6 + q6 + q6 + q6 + q6 + 8 >> 4).as_::<BD::Pixel>());
-            put_dst!(5, (p0 + q0 + q1 + q2 + q3 + q4 * 2 + q5 * 2 + q6 * 2 + q6 + q6 + q6 + q6 + q6 + 8 >> 4).as_::<BD::Pixel>());
+            put_dst!(
+                -6,
+                (p6 + p6 + p6 + p6 + p6 + p6 * 2 + p5 * 2 + p4 * 2 + p3 + p2 + p1 + p0 + q0 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -5,
+                (p6 + p6 + p6 + p6 + p6 + p5 * 2 + p4 * 2 + p3 * 2 + p2 + p1 + p0 + q0 + q1 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -4,
+                (p6 + p6 + p6 + p6 + p5 + p4 * 2 + p3 * 2 + p2 * 2 + p1 + p0 + q0 + q1 + q2 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -3,
+                (p6 + p6 + p6 + p5 + p4 + p3 * 2 + p2 * 2 + p1 * 2 + p0 + q0 + q1 + q2 + q3 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -2,
+                (p6 + p6 + p5 + p4 + p3 + p2 * 2 + p1 * 2 + p0 * 2 + q0 + q1 + q2 + q3 + q4 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -1,
+                (p6 + p5 + p4 + p3 + p2 + p1 * 2 + p0 * 2 + q0 * 2 + q1 + q2 + q3 + q4 + q5 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                0,
+                (p5 + p4 + p3 + p2 + p1 + p0 * 2 + q0 * 2 + q1 * 2 + q2 + q3 + q4 + q5 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                1,
+                (p4 + p3 + p2 + p1 + p0 + q0 * 2 + q1 * 2 + q2 * 2 + q3 + q4 + q5 + q6 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                2,
+                (p3 + p2 + p1 + p0 + q0 + q1 * 2 + q2 * 2 + q3 * 2 + q4 + q5 + q6 + q6 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                3,
+                (p2 + p1 + p0 + q0 + q1 + q2 * 2 + q3 * 2 + q4 * 2 + q5 + q6 + q6 + q6 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                4,
+                (p1 + p0 + q0 + q1 + q2 + q3 * 2 + q4 * 2 + q5 * 2 + q6 + q6 + q6 + q6 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
+            put_dst!(
+                5,
+                (p0 + q0 + q1 + q2 + q3 + q4 * 2 + q5 * 2 + q6 * 2 + q6 + q6 + q6 + q6 + q6 + 8
+                    >> 4)
+                    .as_::<BD::Pixel>()
+            );
         } else if wd >= 8 && flat8in {
-            put_dst!(-3, (p3 + p3 + p3 + 2 * p2 + p1 + p0 + q0 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(-2, (p3 + p3 + p2 + 2 * p1 + p0 + q0 + q1 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(-1, (p3 + p2 + p1 + 2 * p0 + q0 + q1 + q2 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(0, (p2 + p1 + p0 + 2 * q0 + q1 + q2 + q3 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(1, (p1 + p0 + q0 + 2 * q1 + q2 + q3 + q3 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(2, (p0 + q0 + q1 + 2 * q2 + q3 + q3 + q3 + 4 >> 3).as_::<BD::Pixel>());
+            put_dst!(
+                -3,
+                (p3 + p3 + p3 + 2 * p2 + p1 + p0 + q0 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -2,
+                (p3 + p3 + p2 + 2 * p1 + p0 + q0 + q1 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -1,
+                (p3 + p2 + p1 + 2 * p0 + q0 + q1 + q2 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                0,
+                (p2 + p1 + p0 + 2 * q0 + q1 + q2 + q3 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                1,
+                (p1 + p0 + q0 + 2 * q1 + q2 + q3 + q3 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                2,
+                (p0 + q0 + q1 + 2 * q2 + q3 + q3 + q3 + 4 >> 3).as_::<BD::Pixel>()
+            );
         } else if wd == 6 && flat8in {
-            put_dst!(-2, (p2 + 2 * p2 + 2 * p1 + 2 * p0 + q0 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(-1, (p2 + 2 * p1 + 2 * p0 + 2 * q0 + q1 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(0, (p1 + 2 * p0 + 2 * q0 + 2 * q1 + q2 + 4 >> 3).as_::<BD::Pixel>());
-            put_dst!(1, (p0 + 2 * q0 + 2 * q1 + 2 * q2 + q2 + 4 >> 3).as_::<BD::Pixel>());
+            put_dst!(
+                -2,
+                (p2 + 2 * p2 + 2 * p1 + 2 * p0 + q0 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                -1,
+                (p2 + 2 * p1 + 2 * p0 + 2 * q0 + q1 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                0,
+                (p1 + 2 * p0 + 2 * q0 + 2 * q1 + q2 + 4 >> 3).as_::<BD::Pixel>()
+            );
+            put_dst!(
+                1,
+                (p0 + 2 * q0 + 2 * q1 + 2 * q2 + q2 + 4 >> 3).as_::<BD::Pixel>()
+            );
         } else {
             let hev = (p1 - p0).abs() > h || (q1 - q0).abs() > h;
 
