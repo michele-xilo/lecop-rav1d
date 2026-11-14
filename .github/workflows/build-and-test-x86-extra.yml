@@ -23,10 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install prerequisites
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: meson nasm gcc-multilib
-          version: 3.0 # version of cache to load
+        run: sudo apt-get update && sudo apt-get install -y meson nasm gcc-multilib
       - name: git checkout
         uses: actions/checkout@v4
         with:
