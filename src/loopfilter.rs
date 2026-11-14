@@ -3,11 +3,11 @@
 use std::cmp;
 use std::ffi::c_int;
 
-use crate::ctypes::ptrdiff_t;
 use strum::FromRepr;
 
 use crate::align::{Align16, AlignedVec2};
 use crate::cpu::CpuFlags;
+use crate::ctypes::ptrdiff_t;
 use crate::disjoint_mut::DisjointMut;
 use crate::ffi_safe::FFISafe;
 #[cfg(all(

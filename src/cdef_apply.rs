@@ -3,11 +3,11 @@
 use std::cmp;
 use std::ffi::{c_int, c_uint};
 
-use crate::ctypes::ptrdiff_t;
 use bitflags::bitflags;
 
 use crate::align::{Align16, AlignedVec64};
 use crate::cdef::CdefEdgeFlags;
+use crate::ctypes::ptrdiff_t;
 use crate::disjoint_mut::DisjointMut;
 use crate::include::common::bitdepth::{BitDepth, BPC};
 use crate::include::common::intops::ulog2;

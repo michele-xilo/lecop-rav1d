@@ -6,10 +6,10 @@ use std::sync::atomic::AtomicU32;
 use std::sync::Arc;
 use std::{mem, ptr};
 
-use crate::ctypes::ptrdiff_t;
 use bitflags::bitflags;
 use to_method::To as _;
 
+use crate::ctypes::ptrdiff_t;
 use crate::error::{Dav1dResult, Rav1dError, Rav1dResult};
 use crate::include::dav1d::common::Rav1dDataProps;
 use crate::include::dav1d::dav1d::Rav1dEventFlags;

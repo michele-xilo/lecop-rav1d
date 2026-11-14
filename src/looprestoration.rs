@@ -3,13 +3,13 @@
 use std::ffi::{c_int, c_uint};
 use std::{cmp, iter, mem, slice};
 
-use crate::ctypes::ptrdiff_t;
 use bitflags::bitflags;
 use to_method::To;
 use zerocopy::{AsBytes, FromBytes, FromZeroes};
 
 use crate::align::AlignedVec64;
 use crate::cpu::CpuFlags;
+use crate::ctypes::ptrdiff_t;
 use crate::disjoint_mut::DisjointMut;
 use crate::ffi_safe::FFISafe;
 #[cfg(all(
@@ -991,10 +991,9 @@ fn sgr_mix_rust<BD: BitDepth>(
 mod neon {
     use std::ptr;
 
-    use crate::ctypes::intptr_t;
-
     use super::*;
     use crate::align::Align16;
+    use crate::ctypes::intptr_t;
     use crate::include::common::bitdepth::bd_fn;
 
     wrap_fn_ptr!(unsafe extern "C" fn wiener_filter_h(

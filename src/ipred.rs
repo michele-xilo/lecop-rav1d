@@ -3,11 +3,11 @@
 use std::ffi::{c_int, c_uint};
 use std::{cmp, slice};
 
-use crate::ctypes::ptrdiff_t;
 use strum::FromRepr;
 use zerocopy::{AsBytes, FromBytes};
 
 use crate::cpu::CpuFlags;
+use crate::ctypes::ptrdiff_t;
 use crate::enum_map::{enum_map, enum_map_ty, DefaultValue};
 use crate::ffi_safe::FFISafe;
 #[cfg(all(

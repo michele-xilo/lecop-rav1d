@@ -107,7 +107,6 @@ impl Stage {
 
 #[cfg(feature = "profile")]
 pub use imp::*;
-
 #[cfg(not(feature = "profile"))]
 pub use noop::*;
 
@@ -116,10 +115,11 @@ pub use noop::*;
 // ---------------------------------------------------------------------------
 #[cfg(feature = "profile")]
 mod imp {
-    use super::Stage;
     use std::sync::atomic::{AtomicU64, Ordering};
     use std::sync::Mutex;
     use std::time::Instant;
+
+    use super::Stage;
 
     static CYCLES: [AtomicU64; Stage::COUNT] = [const { AtomicU64::new(0) }; Stage::COUNT];
     static CALLS: [AtomicU64; Stage::COUNT] = [const { AtomicU64::new(0) }; Stage::COUNT];

@@ -5,12 +5,12 @@ use std::hint::assert_unchecked;
 use std::ops::BitOr;
 use std::{array, cmp, ptr};
 
-use crate::ctypes::intptr_t;
 use assert_matches::debug_assert_matches;
 use to_method::To as _;
 
 use crate::cdef_apply::rav1d_cdef_brow;
 use crate::ctx::CaseSet;
+use crate::ctypes::intptr_t;
 use crate::env::get_uv_inter_txtp;
 use crate::in_range::InRange;
 use crate::include::common::bitdepth::{AsPrimitive, BitDepth, ToPrimitive, BPC};
